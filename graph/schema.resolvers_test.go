@@ -33,33 +33,31 @@ func TestCreateTodo(t *testing.T) {
 }
 
 func TestTodos(t *testing.T) {
-	t.Run("", func(t *testing.T) {
-		user := model.User{
-			ID: "1",
-		}
-		todos := []*model.Todo{
-			{
-				ID:   "1",
-				User: &user,
-			},
-			{
-				ID:   "2",
-				User: &user,
-			},
-		}
-		resolvers := Resolver{todos: todos}
-		c := client.New(handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &resolvers})))
+	user := model.User{
+		ID: "1",
+	}
+	todos := []*model.Todo{
+		{
+			ID:   "1",
+			User: &user,
+		},
+		{
+			ID:   "2",
+			User: &user,
+		},
+	}
+	resolvers := Resolver{todos: todos}
+	c := client.New(handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &resolvers})))
 
-		var resp struct {
-			Todos []model.Todo
-		}
-		q := `
+	var resp struct {
+		Todos []model.Todo
+	}
+	q := `
     query findTodos {
       todos {
         id
       }
     }`
-		c.MustPost(q, &resp)
-		assert.Equal(t, len(todos), len(resp.Todos))
-	})
+	c.MustPost(q, &resp)
+	assert.Equal(t, len(todos), len(resp.Todos))
 }
