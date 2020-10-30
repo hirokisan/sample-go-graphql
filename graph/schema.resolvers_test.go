@@ -10,6 +10,28 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestCreateTodo(t *testing.T) {
+	todos := []*model.Todo{}
+	resolvers := Resolver{todos: todos}
+	c := client.New(handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &resolvers})))
+	var resp struct {
+		CreateTodo model.Todo
+	}
+	q := `
+  mutation createTodo {
+    createTodo(input:{text:"todo", userId:"1"}) {
+      user {
+        id
+      }
+      text
+      done
+    }
+  }`
+	c.MustPost(q, &resp)
+	assert.Equal(t, "todo", resp.CreateTodo.Text)
+	assert.Equal(t, "1", resp.CreateTodo.User.ID)
+}
+
 func TestTodos(t *testing.T) {
 	t.Run("", func(t *testing.T) {
 		user := model.User{
