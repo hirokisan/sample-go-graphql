@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateTodo(t *testing.T) {
+func TestTodos(t *testing.T) {
 	t.Run("", func(t *testing.T) {
 		user := model.User{
 			ID: "1",
